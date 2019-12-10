@@ -325,4 +325,4 @@
           (println ""))))))
 
 (defn -main [& args]
-  (run-marginalia args [nil]))
+  (run-marginalia args))
