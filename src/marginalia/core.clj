@@ -292,6 +292,7 @@
                 *lift-inline-comments* lift-inline-comments
                 *delete-lifted-comments* exclude-lifted-comments]
         (let [project-clj (or project
+                              name
                               (when (.exists (io/file "project.clj"))
                                 (parse-project-file)))
               choose #(or %1 %2)
@@ -324,4 +325,4 @@
           (println ""))))))
 
 (defn -main [& args]
-  (run-marginalia (butlast args) [(last args)]))
+  (run-marginalia args [nil]))
