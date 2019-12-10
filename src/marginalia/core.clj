@@ -322,3 +322,6 @@
             (uberdoc!  (str *docs* "/" file) sources opts))
           (println "Done generating your documentation in" *docs*)
           (println ""))))))
+
+(defn -main [& args]
+  (run-marginalia (butlast args) [(last args)]))

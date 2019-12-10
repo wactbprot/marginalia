@@ -1,0 +1,8 @@
+{:deps {org.clojure/clojure {:mvn/version "1.7.0"}
+        org.clojure/clojurescript {:mvn/version "1.7.228"}
+        org.clojure/tools.namespace {:mvn/version "0.2.10"}
+        org.clojure/tools.cli {:mvn/version "0.3.3"}
+        org.markdownj/markdownj {:mvn/version "0.3.0-1.0.2b4"}
+        de.ubercode.clostache/clostache "1.4.0"}
+ :paths ["src" "vendor"]
+ :aliases {:test {:extra-paths ["test"]}}}
