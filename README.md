@@ -18,8 +18,7 @@ the official site](http://gdeer81.github.io/marginalia/).
 
 **[View the release notes for this version of Marginalia](https://github.com/gdeer81/marginalia/blob/master/docs/release-notes/marginalia-v0.9.1-release-notes.markdown)**
 
-Usage
------
+# Usage
 
 Currently Marginalia can be used in a number of ways as described below.
 
@@ -28,9 +27,10 @@ Currently Marginalia can be used in a number of ways as described below.
 To use Marginalia with deps.edn, add an alias like this:
 
 ```clojure
-{:aliases {:docs {:extra-deps {marginalia {:git/url "https://github.com/zilti/marginalia" :sha "1234"}}
-            :exec-fn marginalia.core/run-marginalia
-            :main-opts ["-m" "marginalia.core" "-n" "Projectname"]}}}
+{:aliases {:docs {:extra-deps {marginalia {:git/url "https://github.com/wactbprot/marginalia" 
+                                           :sha "1234"}}
+                  :exec-fn marginalia.core/run-marginalia
+                  :main-opts ["-m" "marginalia.core" "-n" "Projectname"]}}}
 ```
 
 Marginalia accepts `:main-opts` as described below:
@@ -50,14 +50,15 @@ Marginalia accepts `:main-opts` as described below:
 * -e --exclude Exclude source file(s) from the document generation
   process `<file1>;<file2>;...`<sup>☆</sup>
 
-<sup>☆</sup> if not given will be taken from `project.clj` TODO: extract information from `deps.edn`
+<sup>☆</sup> if not given will be taken from `project.clj` TODO:
+extract information from `deps.edn`
 
 ## Maven
 
 The [zi plugin](https://github.com/pallet/zi) supports Marginalia.
 
-<details>
-  <summary>Add this code to the project's `pom.xml` file, and run the command `mvn zi:marginalia`.</summary>
+<details> <summary>Add this code to the project's `pom.xml` file, and
+  run the command `mvn zi:marginalia`.</summary>
 
 ```xml
     <plugin>

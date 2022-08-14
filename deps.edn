@@ -4,5 +4,5 @@
         org.clojure/tools.cli {:mvn/version "0.3.3"}
         org.markdownj/markdownj {:mvn/version "0.3.0-1.0.2b4"}
         de.ubercode.clostache/clostache {:mvn/version "1.4.0"}}
- :paths ["src" "vendor"]
+ :paths ["src" "resources"]
  :aliases {:test {:extra-paths ["test"]}}}
