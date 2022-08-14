@@ -22,33 +22,37 @@ Usage
 -----
 
 Currently Marginalia can be used in a number of ways as described below.
-  
-### deps.edn
+
+## deps.edn
 
 To use Marginalia with deps.edn, add an alias like this:
 
 ```clojure
 {:aliases {:docs {:extra-deps {marginalia {:git/url "https://github.com/zilti/marginalia" :sha "1234"}}
-                  :exec-fn marginalia.core/run-marginalia
-				  :main-opts ["-m" "marginalia.core" "-n" "Projectname"]}}}
+            :exec-fn marginalia.core/run-marginalia
+            :main-opts ["-m" "marginalia.core" "-n" "Projectname"]}}}
 ```
 
 Marginalia accepts `:main-opts` as described below:
 
-* -d --dir     Directory into which the documentation will be written (default `docs`)
-* -f --file    File into which the documentation will be written (default `uberdoc.html`)
+* -d --dir Directory into which the documentation will be written
+  (default `docs`)
+* -f --file File into which the documentation will be written (default
+  `uberdoc.html`)
 * -m --multi   Generate each namespace documentation as a separate file
-* -n --name    Project name (if not given will be taken from `project.clj`) *
-* -v --version Project version (if not given will be taken from `project.clj`) * 
-* -D --desc    Project description (if not given will be taken from `project.clj`) * 
-* -a --deps    Project dependencies in the form `<group1>:<artifact1>:<version1>;<group2>...` (if not given will be taken from `project.clj`) * 
-* -c --css     Additional css resources `<resource1>;<resource2>;...` (if not given will be taken from `project.clj`) * 
-* -j --js      Additional javascript resources `<jsfile1>;<jsfile2>;...` (if not given will be taken from `project.clj`) * 
-* -e --exclude Exclude source file(s) from the document generation process `<file1>;<file2>;...` (if not given will be taken from `project.clj`) *
+* -n --name    Project name<sup>☆</sup>
+* -v --version Project version<sup>☆</sup>
+* -D --desc Project description<sup>☆</sup>
+* -a --deps Project dependencies in the form
+  `<group1>:<artifact1>:<version1>;<group2>...`<sup>☆</sup>
+* -c --css Additional css resources `<resource1>;<resource2>;...`<sup>☆</sup>
+* -j --js Additional javascript resources `<jsfile1>;<jsfile2>;...`<sup>☆</sup>
+* -e --exclude Exclude source file(s) from the document generation
+  process `<file1>;<file2>;...`<sup>☆</sup>
 
-TODO: * extract information from `deps.edn`
+<sup>☆</sup> if not given will be taken from `project.clj` TODO: extract information from `deps.edn`
 
-### Maven
+## Maven
 
 The [zi plugin](https://github.com/pallet/zi) supports Marginalia.
 
