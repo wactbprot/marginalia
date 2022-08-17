@@ -40,61 +40,18 @@ Marginalia accepts `:main-opts` as described below:
 * -f --file File into which the documentation will be written (default
   `uberdoc.html`)
 * -m --multi   Generate each namespace documentation as a separate file
-* -n --name    Project name<sup>☆</sup>
-* -v --version Project version<sup>☆</sup>
-* -D --desc Project description<sup>☆</sup>
+* -n --name    Project name
+* -v --version Project version
+* -D --desc Project description
 * -a --deps Project dependencies in the form
   `<group1>:<artifact1>:<version1>;<group2>...`<sup>☆</sup>
-* -c --css Additional css resources `<resource1>;<resource2>;...`<sup>☆</sup>
-* -j --js Additional javascript resources `<jsfile1>;<jsfile2>;...`<sup>☆</sup>
+* -c --css Additional css resources `<resource1>;<resource2>;...`
+* -j --js Additional javascript resources `<jsfile1>;<jsfile2>;...`
 * -e --exclude Exclude source file(s) from the document generation
-  process `<file1>;<file2>;...`<sup>☆</sup>
+  process `<file1>;<file2>;...`
 
 <sup>☆</sup> if not given will be taken from `project.clj` TODO:
 extract information from `deps.edn`
-
-## Maven
-
-The [zi plugin](https://github.com/pallet/zi) supports Marginalia.
-
-<details> <summary>Add this code to the project's `pom.xml` file, and
-  run the command `mvn zi:marginalia`.</summary>
-
-```xml
-    <plugin>
-      <groupId>org.cloudhoist.plugin</groupId>
-      <artifactId>zi</artifactId>
-      <version>0.5.0</version>
-      <configuration>
-        <marginaliaTargetDirectory>autodoc/marginalia</marginaliaTargetDirectory>
-      </configuration>
-    </plugin>
-```
-
-And the following to the project's `settings.xml` file.
-
-```xml
-    <pluginGroups>
-      <pluginGroup>org.cloudhoist.plugin</pluginGroup>
-    </pluginGroups>
-
-    <profiles>
-      <profile>
-        <id>clojure-dev</id>
-        <pluginRepositories>
-          <pluginRepository>
-            <id>sonatype-snapshots</id>
-            <url>http://oss.sonatype.org/content/repositories/releases</url>
-          </pluginRepository>
-        </pluginRepositories>
-      </profile>
-    </profiles>
-
-    <activeProfiles>
-      <activeProfile>clojure-dev</activeProfile>
-    </activeProfiles>
-```
-</details>
 
 Contributors and thanks
 -----------------------
