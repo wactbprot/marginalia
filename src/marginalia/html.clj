@@ -107,6 +107,23 @@
          [:td {:class "codes"} (if (= (:type section) :code)
                                   (codes-to-html (:raw section))
                                   "")]]))
+;; TODO: deps.edn deps look like this:
+(comment
+  {org.clojure/clojure {:mvn/version "1.7.0"}
+   org.clojure/clojurescript {:mvn/version "1.7.228"}
+   org.clojure/tools.namespace {:mvn/version "0.2.10"}
+   org.clojure/tools.cli {:mvn/version "0.3.3"}
+   org.markdownj/markdownj {:mvn/version "0.3.0-1.0.2b4"}
+   de.ubercode.clostache/clostache {:mvn/version "1.4.0"}})
+
+;; lein deps look like this
+(comment
+  {:dependencies [[org.clojure/clojure "1.7.0"]
+                  [org.clojure/clojurescript "1.7.228"]
+                  [org.clojure/tools.namespace "0.2.10"]
+                  [org.clojure/tools.cli "0.3.3"]
+                  [org.markdownj/markdownj "0.3.0-1.0.2b4"]
+                  [de.ubercode.clostache/clostache "1.4.0"]]})
 
 (defn dependencies-html [deps & header-name]
   (when-let [deps (seq deps)]

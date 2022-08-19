@@ -325,3 +325,6 @@
 
 (defn -main [& args]
   (run-marginalia args))
+
+(comment
+  (run-marginalia [ "-n" "test-run"]))
