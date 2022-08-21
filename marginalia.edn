@@ -1,0 +1,2 @@
+{;; configuration map for marginalia
+ :description "lightweight literate programming for clojure -- inspired by [docco](http://jashkenas.github.com/docco/)"}
