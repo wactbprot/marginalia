@@ -32,7 +32,8 @@
 ;; 7. Repeat from step #4 until complete
 ;;
 (ns marginalia.core
-  (:require [clojure.java.io :as io]
+  (:require [clojure.edn     :as edn]
+            [clojure.java.io :as io]
             [clojure.string  :as str])
   (:use [marginalia
          [html :only (uberdoc-html index-html single-page-html)]
@@ -102,6 +103,18 @@
 ;; Marginalia will parse info out of your project.clj to display in
 ;; the generated html file's header.
 
+(defn load-edn
+  "Load edn from an io/reader source (filename or io/resource). Stolen
+  from [clojuredocs](https://clojuredocs.org/clojure.edn/read)"
+  [source]
+  (try
+    (with-open [r (io/reader source)]
+      (edn/read (java.io.PushbackReader. r)))
+
+    (catch java.io.IOException e
+      (printf "Couldn't open '%s': %s\n" source (.getMessage e)))
+    (catch RuntimeException e
+      (printf "Error parsing edn file '%s': %s\n" source (.getMessage e)))))
 
 (defn parse-project-form
   "Parses a project.clj file and returns a map in the following form
@@ -265,19 +278,15 @@
         (cli args
              ["-d" "--dir" "Directory into which the documentation will be written" :default "./docs"]
              ["-f" "--file" "File into which the documentation will be written" :default "uberdoc.html"]
-             ["-n" "--name" "Project name - if not given will be taken from project.clj"]
-             ["-v" "--version" "Project version - if not given will be taken from project.clj"]
-             ["-D" "--desc" "Project description - if not given will be taken from project.clj"]
-             ["-a" "--deps" "Project dependencies in the form <group1>:<artifact1>:<version1>;<group2>...
-                 If not given will be taken from project.clj"]
-             ["-c" "--css" "Additional css resources <resource1>;<resource2>;...
-                 If not given will be taken from project.clj."]
-             ["-j" "--js" "Additional javascript resources <resource1>;<resource2>;...
-                 If not given will be taken from project.clj"]
+             ["-n" "--name" "Project name"]
+             ["-v" "--version" "Project version"]
+             ["-D" "--desc" "Project description"]
+             ["-a" "--deps" "Project dependencies in the form <group1>:<artifact1>:<version1>;<group2>..."]
+             ["-A" "--alias" "include dependencies from this alias"]
+             ["-c" "--css" "Additional css resources <resource1>;<resource2>;..."]
+             ["-j" "--js" "Additional javascript resources <resource1>;<resource2>;..."]
              ["-m" "--multi" "Generate each namespace documentation as a separate file" :flag true]
-             ["-l" "--leiningen" "Generate the documentation for a Leiningen project file."]
-             ["-e" "--exclude" "Exclude source file(s) from the document generation process <file1>;<file2>;...
-                 If not given will be taken from project.clj"]
+             ["-e" "--exclude" "Exclude source file(s) from the document generation process <file1>;<file2>;..."]
              ["-L" "--lift-inline-comments" "Lift ;; inline comments to the top of the enclosing form.
                  They will be treated as if they preceded the enclosing form." :flag true]
              ["-X" "--exclude-lifted-comments" "If ;; inline comments are being lifted into documentation
@@ -310,8 +319,7 @@
                                 :marginalia marg-opts}
                                project-clj)
               sources (->> sources
-                           (filter #(not (source-excluded? % opts)))
-                           (into []))]
+                           (filterv #(not (source-excluded? % opts))))]
           (println "Generating Marginalia documentation for the following source files:")
           (doseq [s sources]
             (println "  " s))
@@ -327,4 +335,5 @@
   (run-marginalia args))
 
 (comment
-  (run-marginalia [ "-n" "test-run"]))
+  (run-marginalia [ "-n" "test-run"])
+  (load-edn "deps.edn"))
