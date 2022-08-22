@@ -272,8 +272,10 @@
 
    If no source files are found, complain with a usage message."
   [args & [project]]
-  (let [[{:keys [dir file name version desc deps css js multi
-                 leiningen exclude
+  (let [[{:keys [dir file
+                 name version desc
+                 deps css js multi
+                 aliases exclude
                  lift-inline-comments exclude-lifted-comments]} files help]
         (cli args
              ["-d" "--dir" "Directory into which the documentation will be written" :default "./docs"]
@@ -282,7 +284,7 @@
              ["-v" "--version" "Project version"]
              ["-D" "--desc" "Project description"]
              ["-a" "--deps" "Project dependencies in the form <group1>:<artifact1>:<version1>;<group2>..."]
-             ["-A" "--alias" "include dependencies from this alias"]
+             ["-A" "--aliases" "Include dependencies from this deps.edn aliases <alias>;<alias>;..."]
              ["-c" "--css" "Additional css resources <resource1>;<resource2>;..."]
              ["-j" "--js" "Additional javascript resources <resource1>;<resource2>;..."]
              ["-m" "--multi" "Generate each namespace documentation as a separate file" :flag true]
@@ -291,8 +293,7 @@
                  They will be treated as if they preceded the enclosing form." :flag true]
              ["-X" "--exclude-lifted-comments" "If ;; inline comments are being lifted into documentation
                  then also exclude them from the source code display." :flag true])
-        sources (distinct (format-sources (seq files)))
-        sources (if leiningen (cons leiningen sources) sources)]
+        sources (distinct (format-sources (seq files)))]
     (if-not sources
       (do
         (println "Wrong number of arguments passed to Marginalia.")
@@ -300,24 +301,25 @@
       (binding [*docs* dir
                 *lift-inline-comments* lift-inline-comments
                 *delete-lifted-comments* exclude-lifted-comments]
-        (let [project-clj (or project
-                              (when (.exists (io/file "project.clj"))
-                                (parse-project-file)))
+        (let [marg-edn (load-edn "marginalia.edn")
+              deps-edn (load-edn "deps.edn")
+              dependencies (or (-> deps-edn :deps) {})
+              aliases (when aliases (mapv keyword (.split aliases ";")))
+              dependencies (into dependencies (mapv (fn [a] (-> deps-edn :aliases a :extra-deps)) aliases))
               choose #(or %1 %2)
               marg-opts (merge-with choose
                                     {:css (when css (.split css ";"))
                                      :javascript (when js (.split js ";"))
-                                     :exclude (when exclude (.split exclude ";"))
-                                     :leiningen leiningen}
-                                    (:marginalia project-clj))
+                                     :exclude (when exclude (.split exclude ";"))}
+                                    (:marginalia marg-edn))
               opts (merge-with choose
                                {:name name
                                 :version version
                                 :description desc
-                                :dependencies (split-deps deps)
+                                :dependencies dependencies
                                 :multi multi
                                 :marginalia marg-opts}
-                               project-clj)
+                               marg-edn)
               sources (->> sources
                            (filterv #(not (source-excluded? % opts))))]
           (println "Generating Marginalia documentation for the following source files:")
@@ -328,7 +330,7 @@
           (if multi
             (multidoc! *docs* sources opts)
             (uberdoc!  (str *docs* "/" file) sources opts))
-          (println "Done generating your documentation in" *docs*)
+          (println "Done generating your documentation in: " *docs*)
           (println ""))))))
 
 (defn -main [& args]

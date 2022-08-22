@@ -1,4 +1,4 @@
-Marginalia 0.9.1
+Marginalia 1.0.0
 ================
 
 [![Clojars Project](https://img.shields.io/clojars/v/marginalia.svg)](https://clojars.org/marginalia)
@@ -24,13 +24,19 @@ Currently Marginalia can be used in a number of ways as described below.
 
 ## deps.edn
 
-To use Marginalia with deps.edn, add an alias like this:
+To use Marginalia with `deps.edn`, add an alias like this:
 
 ```clojure
-{:aliases {:docs {:extra-deps {marginalia {:git/url "https://github.com/wactbprot/marginalia" 
+{:aliases {:docs {:extra-deps {marginalia {:git/url "https://github.com/wactbprot/marginalia"
                                            :sha "1234"}}
-                  :exec-fn marginalia.core/run-marginalia
+                  :exec-fn marginalia.core/-main
                   :main-opts ["-m" "marginalia.core" "-n" "Projectname"]}}}
+```
+
+and run:
+
+```shell
+clojure -M:docs
 ```
 
 Marginalia accepts `:main-opts` as described below:
@@ -45,6 +51,7 @@ Marginalia accepts `:main-opts` as described below:
 * -D --desc Project description
 * -a --deps Project dependencies in the form
   `<group1>:<artifact1>:<version1>;<group2>...`<sup>☆</sup>
+* -A --alias ...
 * -c --css Additional css resources `<resource1>;<resource2>;...`
 * -j --js Additional javascript resources `<jsfile1>;<jsfile2>;...`
 * -e --exclude Exclude source file(s) from the document generation

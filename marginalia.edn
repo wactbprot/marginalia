@@ -1,2 +1,4 @@
 {;; configuration map for marginalia
- :description "lightweight literate programming for clojure -- inspired by [docco](http://jashkenas.github.com/docco/)"}
+ :name "vl-db-agent"
+ :version "1.0.0"
+ :description ""}
