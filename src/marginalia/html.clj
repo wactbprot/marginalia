@@ -52,9 +52,6 @@
     (html [:style {:type "text/css"}
            (slurp-resource resource)])))
 
-
-
-
 ;; The following functions handle preparation of doc text (both comment and docstring
 ;; based) for display through html & css.
 
@@ -107,35 +104,29 @@
          [:td {:class "codes"} (if (= (:type section) :code)
                                   (codes-to-html (:raw section))
                                   "")]]))
-;; TODO: deps.edn deps look like this:
-(comment
-  {org.clojure/clojure {:mvn/version "1.7.0"}
-   org.clojure/clojurescript {:mvn/version "1.7.228"}
-   org.clojure/tools.namespace {:mvn/version "0.2.10"}
-   org.clojure/tools.cli {:mvn/version "0.3.3"}
-   org.markdownj/markdownj {:mvn/version "0.3.0-1.0.2b4"}
-   de.ubercode.clostache/clostache {:mvn/version "1.4.0"}})
-
-;; lein deps look like this
-(comment
-  {:dependencies [[org.clojure/clojure "1.7.0"]
-                  [org.clojure/clojurescript "1.7.228"]
-                  [org.clojure/tools.namespace "0.2.10"]
-                  [org.clojure/tools.cli "0.3.3"]
-                  [org.markdownj/markdownj "0.3.0-1.0.2b4"]
-                  [de.ubercode.clostache/clostache "1.4.0"]]})
+(defn dep->src-ver [dep]
+  (let [m (-> dep second)
+        mvn (:mvn/version m)
+        loc (:local/root m)
+        git (:git/sha m)]
+    (cond
+      mvn [:span [:small "mvn version&nbsp;&nbsp;"] [:i (:mvn/version m)]]
+      loc [:span [:small "local library&nbsp;&nbsp;"] [:i (:local/root m)]]
+      git [:span [:small "git url sha&nbsp;&nbsp;"] [:i (if (> (count git) 7) (subs git 0 7) git)]]
+      :default [:span "unknown"])))
 
 (defn dependencies-html [deps & header-name]
-  (when-let [deps (seq deps)]
-    (let [header-name (or header-name "dependencies")]
-      (html [:div {:class "dependencies"}
-             [:h3 header-name]
-             [:table
-              (map #(html [:tr
-                           [:td {:class "dep-name"} (str (first %))]
-                           [:td {:class "dotted"} [:hr]]
-                           [:td {:class "dep-version"} (second %)]])
-                   deps)]]))))
+  (when (seq deps)
+    (html [:div {:class "dependencies"}
+           [:h2 (or header-name "dependencies")]
+           [:table
+            (map (fn [dep]
+                   (html
+                    [:tr
+                     [:td.dep-name  (-> dep first)]
+                     [:td.dotted [:hr]]
+                     [:td.dep-version (dep->src-ver dep)]]))
+                 deps)]])))
 
 ;; # Load Optional Resources
 ;; Use external Javascript and CSS in your documentation. For example:
@@ -152,7 +143,7 @@
 ;; like this:
 ;;
 ;;     :marginalia {
-;;       :javascript 
+;;       :javascript
 ;;         ["http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"]}
 ;;
 ;; That way you won't have to download and carry around the MathJax library.
@@ -216,7 +207,7 @@
    [:tr
     [:td {:class "docs"}
      [:div {:class "toc"}
-      [:a {:name "toc"} [:h3 "namespaces"]]
+      [:a {:name "toc"} [:h2 "namespaces"]]
       [:ul
        (map #(vector :li (link-to-namespace (:ns %) (:uberdoc? props)))
             docs)]]]

@@ -110,51 +110,12 @@
   (try
     (with-open [r (io/reader source)]
       (edn/read (java.io.PushbackReader. r)))
-
     (catch java.io.IOException e
       (printf "Couldn't open '%s': %s\n" source (.getMessage e)))
     (catch RuntimeException e
       (printf "Error parsing edn file '%s': %s\n" source (.getMessage e)))))
 
-(defn parse-project-form
-  "Parses a project.clj file and returns a map in the following form
-
-       {:name
-        :version
-        :dependencies
-        :dev-dependencies
-        etc...}
-  by merging into the name and version information the rest of the defproject
-  forms (`:dependencies`, etc)"
-  [[_ project-name version-number & attributes]]
-  (merge {:name (str project-name)
-	  :version version-number}
-	 (apply hash-map attributes)))
-
-(defn parse-project-file
-  "Parses a project file -- './project.clj' by default -- and returns a map
-   assembled according to the logic in parse-project-form."
-  ([] (parse-project-file "./project.clj"))
-  ([path]
-      (try
-        (let [rdr (clojure.lang.LineNumberingPushbackReader.
-                    (java.io.FileReader.
-                     (java.io.File. path)))]
-          (loop [line (read rdr)]
-            (let [found-project? (= 'defproject (first line))]
-              (if found-project?
-                (parse-project-form line)
-                (recur (read rdr))))))
-	(catch Exception e
-          (throw (Exception.
-                  (str
-                   "There was a problem reading the project definition from "
-                   path)))))))
-
-
 ;; ## Source File Analysis
-
-
 (defn end-of-block? [cur-group groups lines]
   (let [line (first lines)
         next-line (second lines)
@@ -338,4 +299,4 @@
 
 (comment
   (run-marginalia [ "-n" "test-run"])
-  (load-edn "deps.edn"))
+  (load-edn "des.edn"))
