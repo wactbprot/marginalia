@@ -266,7 +266,7 @@
               deps-edn (load-edn "deps.edn")
               dependencies (or (-> deps-edn :deps) {})
               aliases (when aliases (mapv keyword (.split aliases ";")))
-              dependencies (into dependencies (mapv (fn [a] (-> deps-edn :aliases a :extra-deps)) aliases))
+              alias-dependencies (into {} (mapv (fn [a] (-> deps-edn :aliases a :extra-deps)) aliases))
               choose #(or %1 %2)
               marg-opts (merge-with choose
                                     {:css (when css (.split css ";"))
@@ -278,6 +278,7 @@
                                 :version version
                                 :description desc
                                 :dependencies dependencies
+                                :dev-dependencies alias-dependencies
                                 :multi multi
                                 :marginalia marg-opts}
                                marg-edn)

@@ -117,7 +117,7 @@
 
 (defn dependencies-html [deps & header-name]
   (when (seq deps)
-    (html [:div {:class "dependencies"}
+    (html [:div.dependencies
            [:h2 (or header-name "dependencies")]
            [:table
             (map (fn [dep]
@@ -177,7 +177,7 @@
       [:br]
       (md (:description project-info))]
      (dependencies-html (:dependencies project-info))
-     (dependencies-html (:dev-dependencies project-info) "dev dependencies")]
+     (dependencies-html (:dev-dependencies project-info) "alias dependencies")]
     [:td {:class "codes"
           :style "text-align: center; vertical-align: middle;color: #666;padding-right:20px"}
      [:br]
